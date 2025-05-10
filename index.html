@@ -342,7 +342,9 @@
     }
 
     function showSummary() {
-      const timeTaken = ((new Date() - startTime) / 1000).toFixed(1);
+      const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+      const minutes = Math.floor(elapsedSeconds / 60);
+      const seconds = elapsedSeconds % 60;
       const accuracy = ((correctCount / totalQuestions) * 100).toFixed(1);
       let wrongListHTML = '';
       if (wrongAnswers.length > 0) {
@@ -351,11 +353,11 @@
       document.getElementById('summary').style.display = 'block';
       document.getElementById('summary').innerHTML = `
         <h3>Summary</h3>
-        <p>Correct Answers: ${correctCount}</p>
-        <p>Incorrect Answers: ${incorrectCount}</p>
-        <p>Accuracy: ${accuracy}%</p>
-        <p>Time Taken: ${timeTaken} seconds</p>
-        <p>Score: ${score}</p>
+        <p>✅Correct Answers: ${correctCount}</p>
+        <p>❌Incorrect Answers: ${incorrectCount}</p>
+        <p>🎯Accuracy: ${accuracy}%</p>
+        <p>⏱Time Taken: ${minutes}m ${seconds}s</p>
+        <p>🏆Score: ${score}</p>
         ${wrongListHTML}
       `;
     }

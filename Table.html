@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiplication Tables Practice</title>
+  <link rel="icon" href="./idea" type="image/png">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      color: #333;
+    }
+    header {
+      background: linear-gradient(to right, #f953c6, #b91d73);
+      color: white;
+      padding: 20px;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    header h1 {
+      font-size: 2.4em;
+      font-weight: 700;
+      margin: 0;
+    }
+    button, select, label[for="sound"], label[for="table"] {
+      font-size: 18px;
+      margin: 10px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+      color: #004d40;
+      font-weight: bold;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+      appearance: none;
+    }
+    select {
+      background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 14 10'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' d='M1 1l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px top 50%;
+      background-size: 12px auto;
+    }
+    button:hover, select:hover, input[type="checkbox"]:hover, label[for="sound"]:hover, label[for="table"]:hover {
+      cursor: pointer;
+      background: linear-gradient(to right, #89f7fe, #66a6ff);
+      color: #000;
+      transition: 0.3s;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.5);
+      vertical-align: middle;
+    }
+    label {
+      font-size: 18px;
+      padding: 10px;
+      background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+      border-radius: 8px;
+      margin-left: 5px;
+    }
+    .correct { background-color: #b9fbc0 !important; }
+    .wrong { background-color: #f7a1a1 !important; }
+    .progress-bar-container {
+      width: 80%;
+      margin: 20px auto;
+      background: #ffe082;
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .dark-mode {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+    }
+    .dark-mode .progress-bar-container { background: #444; }
+    .dark-mode button, .dark-mode select, .dark-mode label[for="sound"], .dark-mode label[for="table"] {
+      background: linear-gradient(to right, #4db6ac, #00897b);
+      color: #fff;
+      border: 1px solid #666;
+    }
+    .dark-mode select,
+    .dark-mode input[type="checkbox"],
+    .dark-mode label {
+      background: linear-gradient(to right, #4db6ac, #00897b);
+      color: #fff;
+      border: 1px solid #666;
+    }
+    .dark-mode select option {
+      background-color: #37474f;
+      color: #ffffff;
+    }
+    .dark-mode #summary {
+      background-color: #263238;
+      border-color: #f48fb1;
+      color: #fff;
+    }
+    .dark-mode button:hover,
+    .dark-mode select:hover,
+    .dark-mode input[type="checkbox"]:hover,
+    .dark-mode label[for="sound"]:hover,
+    .dark-mode label[for="table"]:hover {
+      background: linear-gradient(to right, #26c6da, #00acc1);
+      color: #fff;
+    }
+    #summary {
+      margin-top: 30px;
+      font-size: 18px;
+      display: none;
+      padding: 20px;
+      border: 2px dashed #f48fb1;
+      border-radius: 10px;
+      background-color: #fff3e0;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .shortcut-labels {
+      display: none;
+      position: absolute;
+      background: #6a1b9a;
+      color: #fff;
+      border-radius: 5px;
+      padding: 5px 10px;
+      font-size: 12px;
+      z-index: 1000;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #fff;
+      background: linear-gradient(to right, #2193b0, #6dd5ed);
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .dark-mode footer {
+      background: #263238;
+      color: #fff;
+    }
+    #questionArea p {
+      font-size: 24px;
+      margin: 10px;
+    }
+    #answer {
+      font-size: 24px;
+      width: 100px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #fce4ec;
+    }
+    .dark-mode #answer {
+      background-color: #546e7a;
+      color: #fff;
+      border-color: #888;
+    }
+    .shortcut-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8em;
+      }
+      button, select, label {
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+      }
+      #answer {
+        width: 80%;
+        font-size: 20px;
+      }
+      .progress-bar-container {
+        width: 100%;
+      }
+      #summary {
+        width: 90%;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Multiplication Tables Practice</h1>
+  <label for="difficulty">Select Table: </label>
+  <select id="difficulty">
+    <option value="">--Choose--</option>
+    <script>
+      for (let i = 1; i <= 20; i++) {
+        document.write(`<option value="${i}">${i}</option>`);
+      }
+    </script>
+  </select>
+  <br>
+  <div class="shortcut-wrapper">
+    <button onclick="startGame()" onmouseenter="showShortcut(this, 'S = Start')" onmouseleave="hideShortcut()">Start</button>
+  </div>
+  <div class="shortcut-wrapper">
+    <button onclick="stopGame()" onmouseenter="showShortcut(this, 'A = Stop')" onmouseleave="hideShortcut()">Stop</button>
+  </div>
+  <div class="shortcut-wrapper">
+    <button onclick="toggleDarkMode()" onmouseenter="showShortcut(this, 'D = Dark Mode')" onmouseleave="hideShortcut()">Dark Mode</button>
+  </div>
+  <div class="shortcut-wrapper">
+    <button onclick="toggleFullScreen()" onmouseenter="showShortcut(this, 'F = Full Screen')" onmouseleave="hideShortcut()">Full Screen</button>
+  </div>
+  <div class="shortcut-wrapper">
+    <label onmouseenter="showShortcut(this, 'M = Toggle Sound')" onmouseleave="hideShortcut()"><input type="checkbox" id="soundToggle" checked> Sound</label>
+  </div>
+
+  <div id="shortcutHint" class="shortcut-labels"></div>
+
+  <div id="timer" style="font-size:18px; margin-top:10px;"></div>
+  <div id="questionArea" style="margin-top:20px;"></div>
+  <div class="progress-bar-container">
+    <div id="progressBar" class="progress-bar-fill"></div>
+  </div>
+  <div id="scoreArea" style="margin-top:10px;"></div>
+  <div id="summary"></div>
+  <footer>
+    © 2025 Multiplication Practice App. All rights reserved.
+	<p>ramit-kumar-edition</p>
+  </footer>
+
+  <audio id="correctSound" src="./correct-choice"></audio>
+  <audio id="wrongSound" src="./wrong-answer"></audio>
+
+  <script>
+    let interval, currentMultiplier, currentBase, totalQuestions = 10, questionCount = 0;
+    let score = 0, correctCount = 0, incorrectCount = 0, startTime;
+    let timerInterval;
+    let wrongAnswers = [];
+
+    function startGame() {
+      const difficulty = document.getElementById('difficulty').value;
+      if (!difficulty) return alert("Please select a table difficulty level.");
+      currentBase = parseInt(difficulty);
+      questionCount = 0;
+      score = 0;
+      correctCount = 0;
+      incorrectCount = 0;
+      wrongAnswers = [];
+      startTime = new Date();
+      document.getElementById('questionArea').innerHTML = '';
+      document.getElementById('scoreArea').textContent = 'Score: 0';
+      document.getElementById('summary').style.display = 'none';
+      updateProgressBar();
+      nextQuestion();
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function stopGame() {
+      clearTimeout(interval);
+      clearInterval(timerInterval);
+      document.getElementById('questionArea').innerHTML = '<p>Game stopped.</p>';
+      document.getElementById('scoreArea').textContent = '';
+    }
+
+    function updateProgressBar() {
+      const progress = (questionCount / totalQuestions) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    function updateTimer() {
+      const now = new Date();
+      const elapsed = Math.floor((now - startTime) / 1000);
+      const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+      const seconds = (elapsed % 60).toString().padStart(2, '0');
+      document.getElementById('timer').textContent = `Time: ${minutes}:${seconds}`;
+    }
+
+    function nextQuestion() {
+      if (questionCount >= totalQuestions) {
+        updateProgressBar();
+        showSummary();
+        document.getElementById('questionArea').innerHTML += '<p>Game over!</p>';
+        clearInterval(timerInterval);
+        return;
+      }
+
+      updateProgressBar();
+      currentMultiplier = questionCount + 1;
+      const correctAnswer = currentBase * currentMultiplier;
+      const maxDigits = correctAnswer.toString().length;
+      const question = `${currentBase} × ${currentMultiplier} = `;
+
+      document.getElementById('questionArea').innerHTML = `
+        <p>Question ${questionCount + 1} of ${totalQuestions}</p>
+        <p>${question} <input type="number" id="answer" /></p>
+        <p id="feedback"></p>
+      `;
+
+      const answerInput = document.getElementById('answer');
+      answerInput.focus();
+      answerInput.addEventListener('input', function () {
+        if (this.value.length >= maxDigits) {
+          checkAnswer(this);
+        }
+      });
+    }
+
+    function checkAnswer(input) {
+      const userAnswer = parseInt(input.value);
+      const correctAnswer = currentBase * currentMultiplier;
+
+      if (isNaN(userAnswer)) return;
+
+      if (userAnswer === correctAnswer) {
+        input.className = 'correct';
+        document.getElementById('feedback').textContent = '';
+        if (document.getElementById('soundToggle').checked) document.getElementById('correctSound').play();
+        score++;
+        correctCount++;
+      } else {
+        input.className = 'wrong';
+        document.getElementById('feedback').textContent = `Correct answer: ${correctAnswer}`;
+        if (document.getElementById('soundToggle').checked) document.getElementById('wrongSound').play();
+        incorrectCount++;
+        wrongAnswers.push(`${currentBase} × ${currentMultiplier} = ${correctAnswer}`);
+      }
+
+      document.getElementById('scoreArea').textContent = `Score: ${score}`;
+      input.disabled = true;
+      questionCount++;
+      interval = setTimeout(() => nextQuestion(), 1000);
+    }
+
+    function showSummary() {
+      const timeTaken = ((new Date() - startTime) / 1000).toFixed(1);
+      const accuracy = ((correctCount / totalQuestions) * 100).toFixed(1);
+      let wrongListHTML = '';
+      if (wrongAnswers.length > 0) {
+        wrongListHTML = '<p>Incorrect Questions:</p><ul>' + wrongAnswers.map(q => `<li>${q}</li>`).join('') + '</ul>';
+      }
+      document.getElementById('summary').style.display = 'block';
+      document.getElementById('summary').innerHTML = `
+        <h3>Summary</h3>
+        <p>Correct Answers: ${correctCount}</p>
+        <p>Incorrect Answers: ${incorrectCount}</p>
+        <p>Accuracy: ${accuracy}%</p>
+        <p>Time Taken: ${timeTaken} seconds</p>
+        <p>Score: ${score}</p>
+        ${wrongListHTML}
+      `;
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    function showShortcut(element, text) {
+      const label = document.getElementById('shortcutHint');
+      label.style.display = 'block';
+      label.textContent = text;
+      const rect = element.getBoundingClientRect();
+      label.style.top = `${rect.bottom + window.scrollY + 5}px`;
+      label.style.left = `${rect.left + window.scrollX}px`;
+    }
+
+    function hideShortcut() {
+      document.getElementById('shortcutHint').style.display = 'none';
+    }
+
+    document.addEventListener('keydown', function(event) {
+      const key = event.key.toLowerCase();
+      switch (key) {
+        case 's': startGame(); break;
+        case 'a': stopGame(); break;
+        case 'd': toggleDarkMode(); break;
+        case 'f': toggleFullScreen(); break;
+        case 'm': document.getElementById('soundToggle').checked = !document.getElementById('soundToggle').checked; break;
+        case 'l': document.getElementById('difficulty').focus(); break;
+      }
+    });
+  </script>
+</body>
+</html>

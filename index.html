@@ -127,6 +127,21 @@
       margin-right: auto;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
+	@keyframes fadeSlideIn {
+	  from {
+      opacity: 0;
+      transform: translateY(30px);
+      }
+      to {
+      opacity: 1;
+      transform: translateY(0);
+      }
+    }
+
+    #summary.show-animation {
+      animation: fadeSlideIn 0.6s ease forwards;
+    }
+
     .shortcut-labels {
       display: none;
       position: absolute;
@@ -230,7 +245,6 @@
   <div class="progress-bar-container">
     <div id="progressBar" class="progress-bar-fill"></div>
   </div>
-  <div id="scoreArea" style="margin-top:10px;"></div>
   <div id="summary"></div>
   <footer>
     © 2025 Multiplication Practice App. All rights reserved.
@@ -257,7 +271,6 @@
       wrongAnswers = [];
       startTime = new Date();
       document.getElementById('questionArea').innerHTML = '';
-      document.getElementById('scoreArea').textContent = 'Score: 0';
       document.getElementById('summary').style.display = 'none';
       updateProgressBar();
       nextQuestion();
@@ -335,7 +348,6 @@
         wrongAnswers.push(`${currentBase} × ${currentMultiplier} = ${correctAnswer}`);
       }
 
-      document.getElementById('scoreArea').textContent = `Score: ${score}`;
       input.disabled = true;
       questionCount++;
       interval = setTimeout(() => nextQuestion(), 1000);
@@ -350,16 +362,19 @@
       if (wrongAnswers.length > 0) {
         wrongListHTML = '<p>Incorrect Questions:</p><ul>' + wrongAnswers.map(q => `<li>${q}</li>`).join('') + '</ul>';
       }
-      document.getElementById('summary').style.display = 'block';
-      document.getElementById('summary').innerHTML = `
-        <h3>Summary</h3>
-        <p>✅Correct Answers: ${correctCount}</p>
-        <p>❌Incorrect Answers: ${incorrectCount}</p>
-        <p>🎯Accuracy: ${accuracy}%</p>
-        <p>⏱Time Taken: ${minutes}m ${seconds}s</p>
-        <p>🏆Score: ${score}</p>
-        ${wrongListHTML}
-      `;
+      const summaryEl = document.getElementById('summary');
+	  summaryEl.style.display = 'block';
+	  summaryEl.classList.add('show-animation');
+	  summaryEl.innerHTML = `
+	    <h3>Summary</h3>
+	    <p>✅Correct Answers: ${correctCount}</p>
+		<p>❌Incorrect Answers: ${incorrectCount}</p>
+		<p>🎯Accuracy: ${accuracy}%</p>
+		<p>⏱Time Taken: ${minutes}m ${seconds}s</p>
+		<p>🏆Score: ${score}</p>
+		${wrongListHTML}
+	`;
+
     }
 
     function toggleDarkMode() {
